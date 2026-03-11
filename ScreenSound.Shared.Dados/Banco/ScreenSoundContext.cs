@@ -1,12 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ScreenSound.Modelos;
 using ScreenSound.Shared.Modelos.Modelos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScreenSound.Banco;
 public class ScreenSoundContext: DbContext
@@ -15,15 +9,33 @@ public class ScreenSoundContext: DbContext
     public DbSet<Musica> Musicas { get; set; }
     public DbSet<Genero> Generos { get; set; }
 
-    private string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ScreenSoundV0;Integrated Security=True;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
-
     public ScreenSoundContext()
     {
-        
+        LoadEnvironmentVariables();
     }
     public ScreenSoundContext(DbContextOptions options) : base(options)
     {
+        LoadEnvironmentVariables();
+    }
 
+    private static void LoadEnvironmentVariables()
+    {
+        var currentDirectory = Directory.GetCurrentDirectory();
+        var envPath = Path.Combine(currentDirectory, ".env");
+
+        if (!File.Exists(envPath))
+        {
+            var solutionRoot = Directory.GetParent(currentDirectory)?.Parent?.Parent?.FullName;
+            if (solutionRoot != null)
+            {
+                envPath = Path.Combine(solutionRoot, ".env");
+            }
+        }
+
+        if (File.Exists(envPath))
+        {
+            DotNetEnv.Env.Load(envPath);
+        }
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -32,6 +44,9 @@ public class ScreenSoundContext: DbContext
         {
             return;
         }
+
+        var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+
         optionsBuilder
             .UseSqlServer(connectionString)
             .UseLazyLoadingProxies();
