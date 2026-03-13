@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ScreenSound.API.Endpoints;
@@ -45,9 +45,10 @@ builder.Services.AddCors(
 
 var app = builder.Build();
 
-app.UseAuthorization();
-
 app.UseCors("wasm");
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseStaticFiles();
 
@@ -63,3 +64,4 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.Run();
+
