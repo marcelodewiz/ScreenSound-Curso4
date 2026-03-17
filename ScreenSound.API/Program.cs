@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.EntityFrameworkCore;
 using ScreenSound.API.Endpoints;
 using ScreenSound.Banco;
 using ScreenSound.Modelos;
 using ScreenSound.Shared.Dados.Modelos;
 using ScreenSound.Shared.Modelos.Modelos;
-using System.Data.SqlTypes;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
