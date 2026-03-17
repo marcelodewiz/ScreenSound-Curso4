@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ScreenSound.API.Endpoints;
 using ScreenSound.Banco;
 using ScreenSound.Modelos;
@@ -56,6 +59,12 @@ app.AddEndPointGeneros();
 app.MapGroup("auth")
     .MapIdentityApi<PessoaComAcesso>()
     .WithTags("Autorização");
+app.MapPost("auth/logout",async ([FromServices] SignInManager<PessoaComAcesso> signInManager) 
+    => 
+{ 
+    await signInManager.SignOutAsync();
+    return Results.Ok();
+}).RequireAuthorization().WithTags("Autorização");
 
 app.UseSwagger();
 app.UseSwaggerUI();
