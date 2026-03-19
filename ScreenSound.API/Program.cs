@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using ScreenSound.API.Endpoints;
 using ScreenSound.Banco;
 using ScreenSound.Modelos;
 using ScreenSound.Shared.Dados.Modelos;
 using ScreenSound.Shared.Modelos.Modelos;
+using System.Data.SqlTypes;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,21 +48,17 @@ var app = builder.Build();
 
 app.UseCors("wasm");
 
-app.UseAuthentication();
-app.UseAuthorization();
-
 app.UseStaticFiles();
+app.UseAuthorization();
 
 app.AddEndPointsArtistas();
 app.AddEndPointsMusicas();
 app.AddEndPointGeneros();
 
-app.MapGroup("auth")
-    .MapIdentityApi<PessoaComAcesso>()
-    .WithTags("Autorização");
-app.MapPost("auth/logout",async ([FromServices] SignInManager<PessoaComAcesso> signInManager) 
-    => 
-{ 
+app.MapGroup("auth").MapIdentityApi<PessoaComAcesso>().WithTags("Autorização");
+
+app.MapPost("auth/logout", async ([FromServices] SignInManager<PessoaComAcesso> signInManager) =>
+{
     await signInManager.SignOutAsync();
     return Results.Ok();
 }).RequireAuthorization().WithTags("Autorização");
@@ -70,4 +67,3 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.Run();
-

@@ -18,9 +18,9 @@ builder.Services.AddScoped<AuthAPI>(sp => (AuthAPI)sp.GetRequiredService<Authent
 builder.Services.AddScoped<CookieHandler>();
 builder.Services.AddScoped<ArtistaAPI>();
 builder.Services.AddScoped<MusicaAPI>();
-builder.Services.AddScoped<AuthAPI>();
 
-builder.Services.AddHttpClient("API",client => {
+
+builder.Services.AddHttpClient("API", client => {
     client.BaseAddress = new Uri(builder.Configuration["APIServer:Url"]!);
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 }).AddHttpMessageHandler<CookieHandler>();
