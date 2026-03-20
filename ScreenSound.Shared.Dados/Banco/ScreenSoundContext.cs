@@ -10,6 +10,7 @@ public class ScreenSoundContext: IdentityDbContext<PessoaComAcesso, PerfilDeAces
     public DbSet<Artista> Artistas { get; set; }
     public DbSet<Musica> Musicas { get; set; }
     public DbSet<Genero> Generos { get; set; }
+    public DbSet<AvaliacaoArtista> AvaliacaoArtistas { get; set; }
 
     public ScreenSoundContext()
     {
@@ -60,6 +61,12 @@ public class ScreenSoundContext: IdentityDbContext<PessoaComAcesso, PerfilDeAces
         modelBuilder.Entity<Musica>()
             .HasMany(c => c.Generos)
             .WithMany(c => c.Musicas);
+
+
+        modelBuilder.Entity<AvaliacaoArtista>()
+            .HasKey(a => new { a.ArtistaId, a.PessoaId });
+
+
     }
 
 }
